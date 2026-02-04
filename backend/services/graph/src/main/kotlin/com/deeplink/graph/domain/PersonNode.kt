@@ -1,4 +1,5 @@
 package com.deeplink.graph.domain
+import com.deeplink.common.v1.FuzzyDate
 
 
 import org.springframework.data.annotation.Id

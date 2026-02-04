@@ -27,7 +27,7 @@ dependencies {
     implementation("io.grpc:grpc-kotlin-stub:1.4.1")
     implementation("io.grpc:grpc-protobuf:1.63.0")
 
-    implementation("org.springframework.kafka:spring-kafka:4.0.2")
+    implementation("org.springframework.kafka:spring-kafka:3.1.0")
 
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")

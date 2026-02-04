@@ -16,6 +16,15 @@ spring:
     neo4j:
       database: neo4j
 
+  kafka:
+    bootstrap-servers: localhost:19092
+    consumer:
+      group-id: graph-service-group # Вот этого поля не хватало
+      auto-offset-reset: earliest
+      # Важно: ключи - строки, значения - байты (Protobuf)
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+
 # Logging configuration to see our gRPC requests
 logging:
   level:
