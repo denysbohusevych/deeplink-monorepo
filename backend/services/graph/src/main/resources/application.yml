@@ -1,0 +1,23 @@
+server:
+  port: 8081 # Graph Service will run on port 8081
+
+spring:
+  application:
+    name: graph-service
+
+  # Neo4j connection settings
+  neo4j:
+    uri: bolt://localhost:7687
+    authentication:
+      username: neo4j
+      password: password # In production, we will get this from environment variables
+
+  data:
+    neo4j:
+      database: neo4j
+
+# Logging configuration to see our gRPC requests
+logging:
+  level:
+    root: INFO
+    com.deeplink: DEBUG

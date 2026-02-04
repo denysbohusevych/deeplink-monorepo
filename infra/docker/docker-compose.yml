@@ -1,0 +1,76 @@
+services:
+  # === Database (Memory) ===
+  neo4j:
+    image: neo4j:5.16.0
+    container_name: deeplink-neo4j
+    ports:
+      - "7474:7474" # UI
+      - "7687:7687" # Bolt
+    environment:
+      - NEO4J_AUTH=neo4j/password
+      - NEO4J_PLUGINS=["apoc"]
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*
+    volumes:
+      - ./neo4j-data:/data
+    restart: unless-stopped
+    networks:
+      - deeplink-net
+
+  # === Event Bus (Nervous System) ===
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v23.3.6
+    container_name: deeplink-redpanda
+    command:
+      - redpanda start
+      - --smp 1  # Ограничиваем использование CPU (1 ядро), чтобы не грузить ноутбук
+      - --memory 1G # Ограничиваем память
+      - --reserve-memory 0M
+      - --overprovisioned
+      - --node-id 0
+      - --check=false
+      # Настройка слушателей:
+      # - Внутренний (для других контейнеров): порт 9092
+      # - Внешний (для твоего IDE/Host): порт 19092
+      - --kafka-addr PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr PLAINTEXT://redpanda:29092,OUTSIDE://localhost:19092
+      - --pandaproxy-addr 0.0.0.0:8082
+      - --advertise-pandaproxy-addr localhost:8082
+    ports:
+      - "19092:9092" # Kafka API (доступно снаружи как localhost:19092)
+      - "8082:8082"  # REST Proxy
+      - "9644:9644"  # Admin API
+    volumes:
+      - ./redpanda-data:/var/lib/redpanda/data
+    networks:
+      - deeplink-net
+
+  # === UI Console for Kafka ===
+  redpanda-console:
+    image: docker.redpanda.com/redpandadata/console:v2.4.3
+    container_name: deeplink-console
+    entrypoint: /bin/sh
+    command: -c "echo \"$$CONSOLE_CONFIG_FILE\" > /tmp/config.yaml; /app/console"
+    environment:
+      CONFIG_FILEPATH: /tmp/config.yaml
+      CONSOLE_CONFIG_FILE: |
+        kafka:
+          brokers: ["redpanda:29092"] # Подключается внутри сети docker
+          schemaRegistry:
+            enabled: true
+            urls: ["http://redpanda:8081"]
+        redpanda:
+          adminApi:
+            enabled: true
+            urls: ["http://redpanda:9644"]
+    ports:
+      - "8080:8080" # Доступ к UI через http://localhost:8080
+    depends_on:
+      - redpanda
+    networks:
+      - deeplink-net
+
+networks:
+  deeplink-net:
+    driver: bridge

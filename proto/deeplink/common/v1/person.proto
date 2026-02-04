@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package deeplink.domain.v1;
+
+import "deeplink/common/v1/types.proto";
+
+option java_package = "com.deeplink.domain.v1";
+option java_multiple_files = true;
+option go_package = "github.com/yourusername/deeplink/gen/go/domain/v1;domainv1";
+
+enum Gender {
+  GENDER_UNSPECIFIED = 0;
+  GENDER_MALE = 1;
+  GENDER_FEMALE = 2;
+  GENDER_OTHER = 3;
+}
+
+message Person {
+  string id = 1; // UUID
+
+  // Basic data
+  string display_name = 2;
+  repeated string aliases = 3; // Aliases
+  string notes = 4;
+
+  // Demographics
+  deeplink.common.v1.FuzzyDate birth_date = 5;
+  deeplink.common.v1.FuzzyDate death_date = 6;
+  Gender gender = 7;
+  repeated string nationalities = 8; // ISO country codes (RU, US)
+
+  // Technical links
+  string biometrics_ref = 9; // Reference to face vector
+
+  // Record metadata
+  deeplink.common.v1.Origin origin = 10;
+}

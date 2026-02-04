@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package deeplink.common.v1;
+
+option java_package = "com.deeplink.common.v1";
+option java_multiple_files = true;
+option go_package = "github.com/yourusername/deeplink/gen/go/common/v1;commonv1";
+
+// Confidence Score
+enum ConfidenceLevel {
+  CONFIDENCE_LEVEL_UNSPECIFIED = 0;
+  CONFIDENCE_LEVEL_LOW = 1;       // 0-29% (Rumors)
+  CONFIDENCE_LEVEL_MEDIUM = 2;    // 30-69% (Requires verification)
+  CONFIDENCE_LEVEL_HIGH = 3;      // 70-89% (High probability)
+  CONFIDENCE_LEVEL_CONFIRMED = 4; // 90-100% (Fact)
+}
+
+// Fuzzy date (often only the year is known in OSINT)
+message FuzzyDate {
+  int32 year = 1;  // Required
+  int32 month = 2; // 1-12, Optional (0 if unknown)
+  int32 day = 3;   // 1-31, Optional (0 if unknown)
+  string original_string = 4; // Original text, e.g. "late 90s"
+}
+
+// Time interval (for Bitemporal Logic)
+message DateRange {
+  FuzzyDate start = 1;
+  FuzzyDate end = 2; // If not specified, considered "to the present"
+}
+
+// Data source (Provenance)
+message Origin {
+  string source_artifact_id = 1; // UUID of the link to the downloaded file in MinIO
+  string provider = 2;           // Crawler name (e.g., "telegram-bot-v1")
+  int64 collected_at_unix = 3;   // Unix Timestamp
+}

@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package deeplink.graph.v1;
+
+import "deeplink/common/v1/person.proto";
+import "deeplink/common/v1/types.proto";
+
+option java_package = "com.deeplink.graph.v1";
+option java_multiple_files = true;
+option go_package = "github.com/yourusername/deeplink/gen/go/graph/v1;graphv1";
+
+// Definition of the Graph Service API
+service GraphService {
+  // Saves a Person entity to the graph.
+  // If ID exists, it updates the node; otherwise, creates a new one.
+  rpc SavePerson(SavePersonRequest) returns (SavePersonResponse);
+
+  // Retrieves a Person by their UUID
+  rpc GetPerson(GetPersonRequest) returns (GetPersonResponse);
+}
+
+message SavePersonRequest {
+  deeplink.domain.v1.Person person = 1;
+}
+
+message SavePersonResponse {
+  string id = 1; // The UUID of the saved node
+  deeplink.common.v1.Origin origin = 2; // Metadata about the operation
+}
+
+message GetPersonRequest {
+  string id = 1;
+}
+
+message GetPersonResponse {
+  deeplink.domain.v1.Person person = 1;
+}

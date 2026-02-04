@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package deeplink.graph.v1;
+
+import "deeplink/common/v1/types.proto";
+
+option java_package = "com.deeplink.graph.v1";
+option java_multiple_files = true;
+option go_package = "github.com/yourusername/deeplink/gen/go/graph/v1;graphv1";
+
+enum RelationType {
+  RELATION_TYPE_UNSPECIFIED = 0;
+  RELATION_TYPE_OWNERSHIP = 1;    // Ownership
+  RELATION_TYPE_DIRECTORSHIP = 2; // Directorship
+  RELATION_TYPE_EMPLOYMENT = 3;   // Employment
+  RELATION_TYPE_FAMILY = 4;       // Family
+  RELATION_TYPE_ASSOCIATION = 5;  // Association
+  RELATION_TYPE_COMMUNICATION = 6;// Communication
+  RELATION_TYPE_LINKED_TO = 7;    // Technical link (Person -> Phone)
+}
+
+message Relationship {
+  // Unique relationship ID (for editing)
+  string id = 1;
+
+  // Participants
+  string from_entity_id = 2;
+  string to_entity_id = 3;
+
+  // Semantics
+  RelationType type = 4;
+
+  // Temporality (when the relationship was valid)
+  deeplink.common.v1.DateRange validity = 5;
+
+  // Flexible attributes (Map)
+  // For example: {"percentage": "25", "job_title": "CTO"}
+  map<string, string> attributes = 6;
+
+  // Metadata
+  deeplink.common.v1.ConfidenceLevel confidence = 7;
+  deeplink.common.v1.Origin origin = 8;
+}
