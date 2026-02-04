@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package deeplink.domain.v1;
+
+import "deeplink/common/v1/types.proto";
+
+option java_package = "com.deeplink.domain.v1";
+option java_multiple_files = true;
+
+enum DocumentType {
+  DOCUMENT_TYPE_UNSPECIFIED = 0;
+  DOCUMENT_TYPE_PASSPORT = 1;
+  DOCUMENT_TYPE_DRIVER_LICENSE = 2;
+  DOCUMENT_TYPE_ID_CARD = 3;
+  DOCUMENT_TYPE_VISA = 4;
+}
+
+message Document {
+  string id = 1;
+
+  DocumentType type = 2;
+  string number = 3; // Серия и номер
+  string country = 4; // Страна выдачи
+
+  deeplink.common.v1.FuzzyDate issue_date = 5;
+  deeplink.common.v1.FuzzyDate expiration_date = 6;
+
+  string holder_ref_id = 7; // Ссылка на Person ID (чей документ)
+
+  deeplink.common.v1.Origin origin = 8;
+}

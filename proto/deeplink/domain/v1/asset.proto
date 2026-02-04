@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package deeplink.domain.v1;
+
+import "deeplink/common/v1/types.proto";
+
+option java_package = "com.deeplink.domain.v1";
+option java_multiple_files = true;
+
+enum AssetType {
+  ASSET_TYPE_UNSPECIFIED = 0;
+  ASSET_TYPE_BANK_ACCOUNT = 1;
+  ASSET_TYPE_CRYPTO_WALLET = 2;
+  ASSET_TYPE_REAL_ESTATE = 3;
+  ASSET_TYPE_VEHICLE = 4; // Авто, Яхта, Самолет
+  ASSET_TYPE_INTELLECTUAL_PROPERTY = 5;
+}
+
+message Asset {
+  string id = 1;
+
+  AssetType type = 2;
+
+  // Идентификатор актива
+  // Для банка: IBAN
+  // Для крипты: Адрес кошелька
+  // Для авто: VIN / Госномер
+  string identifier = 3;
+
+  string description = 4; // Например: "Вилла в Испании" или "Счет в Bank of Cyprus"
+
+  // Стоимость (если известна оценка)
+  //deeplink.common.v1.Money estimated_value = 5;
+
+  deeplink.common.v1.Origin origin = 6;
+}

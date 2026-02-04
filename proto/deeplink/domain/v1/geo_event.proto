@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package deeplink.domain.v1;
+
+import "deeplink/common/v1/types.proto";
+
+option java_package = "com.deeplink.domain.v1";
+option java_multiple_files = true;
+
+message Location {
+  string id = 1;
+
+  string name = 2; // Полная строка адреса ("г. Москва, ул. Ленина, 1")
+
+  // Координаты
+  double latitude = 3;
+  double longitude = 4;
+
+  // Структурированный адрес
+  string country = 5;
+  string city = 6;
+  string street = 7;
+  string postal_code = 8;
+
+  deeplink.common.v1.Origin origin = 9;
+}
+
+message Event {
+  string id = 1;
+
+  string name = 2; // "Встреча в Минске", "Регистрация домена"
+  string description = 3;
+
+  deeplink.common.v1.DateRange date = 4;
+
+  // Ссылка на место проведения
+  string location_ref_id = 5;
+
+  deeplink.common.v1.Origin origin = 6;
+}

@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package deeplink.domain.v1;
+
+import "deeplink/common/v1/types.proto";
+
+option java_package = "com.deeplink.domain.v1";
+option java_multiple_files = true;
+
+enum OrganizationStatus {
+  ORGANIZATION_STATUS_UNSPECIFIED = 0;
+  ORGANIZATION_STATUS_ACTIVE = 1;
+  ORGANIZATION_STATUS_DISSOLVED = 2; // Ликвидирована
+  ORGANIZATION_STATUS_BANKRUPT = 3;
+  ORGANIZATION_STATUS_INACTIVE = 4;
+}
+
+message Organization {
+  string id = 1;
+
+  // Названия (массив, т.к. может быть много торговых марок или имен на разных языках)
+  repeated string names = 2;
+
+  // Юридические данные
+  string registration_number = 3; // ИНН, OGRN, Company Number (Ключевое поле для мерджа)
+  string jurisdiction = 4;        // ISO код страны (RU, US, GB)
+  string legal_form = 5;          // ООО, Inc, GmbH, Ltd
+  OrganizationStatus status = 6;
+
+  // Жизненный цикл
+  deeplink.common.v1.DateRange lifecycle = 7; // Дата основания и закрытия
+
+  // Контекст
+  string description = 8;
+  repeated string tags = 9; // "Sanctioned", "Offshore", "Shell Company"
+
+  // Метаданные
+  deeplink.common.v1.Origin origin = 10;
+}

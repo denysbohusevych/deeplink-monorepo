@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package deeplink.domain.v1;
+
+import "deeplink/common/v1/types.proto";
+
+option java_package = "com.deeplink.domain.v1";
+option java_multiple_files = true;
+
+enum Platform {
+  PLATFORM_UNSPECIFIED = 0;
+  PLATFORM_TELEGRAM = 1;
+  PLATFORM_TWITTER = 2;
+  PLATFORM_FACEBOOK = 3;
+  PLATFORM_INSTAGRAM = 4;
+  PLATFORM_LINKEDIN = 5;
+  PLATFORM_GITHUB = 6;
+  PLATFORM_DARKWEB_FORUM = 7;
+}
+
+message VirtualIdentity {
+  string id = 1;
+
+  Platform platform = 2;
+
+  // Идентификаторы
+  string user_id = 3;   // Неизменяемый ID (напр. 123456789)
+  string username = 4;  // Изменяемый хендл (напр. @durov)
+  string display_name = 5; // Имя в профиле (напр. "Pavel D.")
+
+  // Контент
+  string bio = 6;
+  string profile_url = 7;
+  string avatar_ref = 8; // Ссылка на скачанную аватарку в MinIO
+
+  deeplink.common.v1.Origin origin = 9;
+}

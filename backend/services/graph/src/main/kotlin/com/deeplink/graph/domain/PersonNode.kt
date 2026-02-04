@@ -1,34 +1,45 @@
 package com.deeplink.graph.domain
-import com.deeplink.common.v1.FuzzyDate
-
 
 import org.springframework.data.annotation.Id
+import org.springframework.data.neo4j.core.schema.CompositeProperty
 import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.Property
 
-/**
- * Represents a "Person" node in the Neo4j database.
- * This class mirrors the protobuf Person message but is adapted for OGM (Object Graph Mapping).
- */
 @Node("Person")
 data class PersonNode(
-    // We use the same UUID as in the protobuf message
     @Id
     val id: String,
 
+    // --- Basic Info ---
     @Property("display_name")
     val displayName: String?,
 
-    // Storing notes as a simple property
-    @Property("notes")
-    val notes: String?,
-
-    // Storing aliases as a list of strings
     @Property("aliases")
     val aliases: List<String> = emptyList(),
 
-    // We will map other complex fields (like FuzzyDate) later using Converters,
-    // for now, let's keep it simple to test the connection.
+    @Property("notes")
+    val notes: String?,
+
+    // --- Demographics ---
     @Property("gender")
-    val gender: String?
+    val gender: String?, // Stored as String (MALE, FEMALE)
+
+    @Property("nationalities")
+    val nationalities: List<String> = emptyList(),
+
+    // --- Complex Types (Composite Properties) ---
+    // In DB this will look like: birthDate.year, birthDate.month
+    @CompositeProperty(prefix = "birthDate.")
+    val birthDate: Neo4jFuzzyDate? = null,
+
+    @CompositeProperty(prefix = "deathDate.")
+    val deathDate: Neo4jFuzzyDate? = null,
+
+    // --- Technical ---
+    @Property("biometrics_ref")
+    val biometricsRef: String?,
+
+    // --- Metadata ---
+    @CompositeProperty(prefix = "origin.")
+    val origin: Neo4jOrigin? = null
 )

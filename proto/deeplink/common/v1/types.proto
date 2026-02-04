@@ -35,3 +35,18 @@ message Origin {
   string provider = 2;           // Crawler name (e.g., "telegram-bot-v1")
   int64 collected_at_unix = 3;   // Unix Timestamp
 }
+
+message Money {
+  // Трехбуквенный код валюты по ISO 4217 (USD, EUR).
+  // Для криптовалют используем тикеры (BTC, ETH).
+  string currency_code = 1;
+
+  // Целая часть суммы.
+  // Например, если цена $1.25, то units = 1.
+  int64 units = 2;
+
+  // Дробная часть суммы в нано-единицах (10^-9).
+  // Значение должно быть между -999,999,999 и +999,999,999 включительно.
+  // Если цена $1.25, то nanos = 250,000,000.
+  int32 nanos = 3;
+}

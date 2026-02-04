@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package deeplink.ingestion.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option java_package = "com.deeplink.ingestion.v1";
+option java_multiple_files = true;
+
+// Ссылка на скачанный файл (Evidence)
+message SourceArtifact {
+  string id = 1; // UUID
+
+  string url = 2;        // Исходный URL
+  string content_type = 3; // text/html, application/pdf
+  int64 size_bytes = 4;
+
+  string storage_path = 5; // Путь в MinIO bucket (напр. /2023/10/20/uuid.html)
+  string sha256_hash = 6;  // Для проверки целостности (Integrity Check)
+
+  google.protobuf.Timestamp fetched_at = 7;
+}

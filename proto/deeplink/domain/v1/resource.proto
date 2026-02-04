@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package deeplink.domain.v1;
+
+import "deeplink/common/v1/types.proto";
+
+option java_package = "com.deeplink.domain.v1";
+option java_multiple_files = true;
+
+enum ResourceType {
+  RESOURCE_TYPE_UNSPECIFIED = 0;
+  RESOURCE_TYPE_EMAIL = 1;
+  RESOURCE_TYPE_PHONE = 2;
+  RESOURCE_TYPE_IP_ADDRESS = 3;
+  RESOURCE_TYPE_DOMAIN = 4;
+  RESOURCE_TYPE_URL = 5;
+  RESOURCE_TYPE_MAC_ADDRESS = 6;
+}
+
+message Resource {
+  string id = 1;
+
+  ResourceType type = 2;
+  string value = 3; // Сам номер телефона, email или IP
+
+  // Дополнительные данные
+  string provider = 4; // Gmail, Vodafone, GoDaddy (ISP/Registrar)
+  string country = 5;  // Гео-привязка IP или код страны телефона
+
+  deeplink.common.v1.Origin origin = 6;
+}
